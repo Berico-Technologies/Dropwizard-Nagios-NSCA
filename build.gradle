@@ -4,6 +4,7 @@ version = '0.1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven'
 
 repositories {
   maven { url "http://nexus.berico.us/content/groups/public/" }
@@ -16,6 +17,23 @@ dependencies {
    compile "fork.com.googlecode.jsendnsca:jsendnsca:2.2.1"
    testCompile "junit:junit:4.11"
    testCompile "org.mockito:mockito-core:1.9.5"
+}
+
+uploadArchives {
+
+    repositories {
+        mavenDeployer {
+            repository(url: "http://nexus.berico.us/content/repositories/releases/") {
+                authentication(userName: berico_nexusUsername, password: berico_nexusPassword)
+            }
+            snapshotRepository(url: "http://nexus.berico.us/content/repositories/snapshots/") {
+                authentication(userName: berico_nexusUsername, password: berico_nexusPassword)
+            }
+            pom.version = version
+            pom.groupId = group
+            pom.artifactId = "dropwizard-nagios-nsca"
+        }
+    }
 }
 
 wrapper {
